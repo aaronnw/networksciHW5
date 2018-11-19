@@ -9,11 +9,10 @@ def build_graph(n = 10000, c = 4):
     G = nx.Graph()
     nodes = [i for i in range(n)]
     G.add_nodes_from(nodes, cluster = 0 )
-    for i in range(len(nodes)):
-        probs = [rand.random() for node in nodes]
-        for j in range(i, len(nodes)):
-            if probs[j] < p and i != j:
-                G.add_edge(nodes[i], nodes[j])
+    for i in range(n):
+        for j in range(i+1, n):
+            if rand.random() < p:
+                G.add_edge(i,j)
     return G
 
 def largest_cluster(cluster_list, cluster_to_nodes):
@@ -75,13 +74,18 @@ def percolate (g):
 
 if __name__ == '__main__':
     g = []
-    num_graphs = 10
-    num_t = 1000
+    num_graphs = 5
+    num_t = 10000
     biggest_clusters = []
     for i in range(num_graphs):
+        print("Building graph: ", i)
         g.append(build_graph(n=num_t))
+    print("Graphs built")
     x_axis = [t for t in range(num_t)]
-    results = [percolate(g[i]) for i in range(num_graphs)]
+    results = []
+    for i in range(num_graphs):
+        print("percolating for graph: ", i )
+        results.append(percolate(g[i]))
     averages = []
     for t in range(num_t):
         size_for_t = [val[t] for val in results]
